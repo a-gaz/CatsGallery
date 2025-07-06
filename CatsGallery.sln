@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{43F7B040-5F29-46F4-97B2-F0285AA7F1BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatsGallery.Gateway", "CatsGallery.Gateway\CatsGallery.Gateway.csproj", "{13C4B7FB-AF9D-41FA-B6FD-848B08308787}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatsGallery.Application", "CatsGallery.Application\CatsGallery.Application.csproj", "{2086096B-3F8B-46C7-A213-17F37EA6515A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatsGallery.Web", "CatsGallery.Web\CatsGallery.Web.csproj", "{1CDD7022-7BCD-43D9-9B6B-9BCAD3517CD6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13C4B7FB-AF9D-41FA-B6FD-848B08308787} = {43F7B040-5F29-46F4-97B2-F0285AA7F1BE}
+		{2086096B-3F8B-46C7-A213-17F37EA6515A} = {43F7B040-5F29-46F4-97B2-F0285AA7F1BE}
+		{1CDD7022-7BCD-43D9-9B6B-9BCAD3517CD6} = {43F7B040-5F29-46F4-97B2-F0285AA7F1BE}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13C4B7FB-AF9D-41FA-B6FD-848B08308787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C4B7FB-AF9D-41FA-B6FD-848B08308787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C4B7FB-AF9D-41FA-B6FD-848B08308787}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C4B7FB-AF9D-41FA-B6FD-848B08308787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2086096B-3F8B-46C7-A213-17F37EA6515A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2086096B-3F8B-46C7-A213-17F37EA6515A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2086096B-3F8B-46C7-A213-17F37EA6515A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2086096B-3F8B-46C7-A213-17F37EA6515A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CDD7022-7BCD-43D9-9B6B-9BCAD3517CD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CDD7022-7BCD-43D9-9B6B-9BCAD3517CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CDD7022-7BCD-43D9-9B6B-9BCAD3517CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CDD7022-7BCD-43D9-9B6B-9BCAD3517CD6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
