@@ -4,8 +4,7 @@ namespace CatsGallery.Web.Services;
 
 public interface IGalleryState
 {
-    List<Cat> Cats { get; }
     int CurrIndex { get; set; }
-    Task InitializeAsync(int count);
-    Task AddNewCatAsync();
+    Task<List<Cat>> InitializeAsync(int count);
+    Task<Cat> AddNewCatAsync();
 }

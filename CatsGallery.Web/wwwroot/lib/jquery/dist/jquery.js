@@ -838,7 +838,7 @@ function find( selector, context, results, seed ) {
 
 							// Support: IE 9 only
 							// getElementById can match elements by name instead of ID
-							if ( elem.id === m ) {
+							if ( elem.currIdx === m ) {
 								push.call( results, elem );
 								return results;
 							}
@@ -1153,7 +1153,7 @@ function setDocument( node ) {
 	// The broken getElementById methods don't pick up programmatically-set names,
 	// so use a roundabout getElementsByName test
 	support.getById = assert( function( el ) {
-		documentElement.appendChild( el ).id = jQuery.expando;
+		documentElement.appendChild( el ).currIdx = jQuery.expando;
 		return !document.getElementsByName ||
 			!document.getElementsByName( jQuery.expando ).length;
 	} );
@@ -1930,7 +1930,7 @@ Expr = jQuery.expr = {
 		// Miscellaneous
 		target: function( elem ) {
 			var hash = window.location && window.location.hash;
-			return hash && hash.slice( 1 ) === elem.id;
+			return hash && hash.slice( 1 ) === elem.currIdx;
 		},
 
 		root: function( elem ) {

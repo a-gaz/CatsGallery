@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{43F7B040-5F29-46F4-97B2-F0285AA7F1BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatsGallery.Gateway", "CatsGallery.Gateway\CatsGallery.Gateway.csproj", "{13C4B7FB-AF9D-41FA-B6FD-848B08308787}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatsGallery.CatApi", "CatsGallery.CatApi\CatsGallery.CatApi.csproj", "{13C4B7FB-AF9D-41FA-B6FD-848B08308787}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatsGallery.Application", "CatsGallery.Application\CatsGallery.Application.csproj", "{2086096B-3F8B-46C7-A213-17F37EA6515A}"
 EndProject

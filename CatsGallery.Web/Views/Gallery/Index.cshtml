@@ -1,10 +1,28 @@
-﻿@model CatsGallery.Web.ViewModels.GalleryViewModel
+﻿@{
+    ViewData["Title"] = "Cats Gallery";
+}
 
+<div class="container">
+    <div class="photo-container">
+        <div>
+            <img id="prev-cat" src="" class="photo-container prev-photo" alt="Previous Cat"/>
+        </div>
+        <div>
+            <img id="curr-cat" src="" class="photo-container current-photo" alt="Current Cat"/>
+        </div>
+        <div>
+            <img id="next-cat" src="" class="photo-container next-photo" alt="Next Cat"/>
+        </div>
+    </div>
 
-<div class="body">
-</div>
+    <div class="nav-buttons">
+        <button class="gallery-btn btn btn-outline-secondary border-2 px-4 py-2 btn-prev">
+            Предыдущая
+        </button>
 
-<div class="container" id="gallery-container">
-    @await Html.PartialAsync("GalleryPartial", Model)
+        <button class="gallery-btn btn btn-outline-secondary border-2 px-4 py-2 btn-next">
+            Следующая
+        </button>
+    </div>
 </div>
 
