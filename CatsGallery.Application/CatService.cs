@@ -8,7 +8,6 @@ public class CatService : ICatService
 {
     private readonly ICatApiService _catApiService;
 
-    private static int i = 0;
     public CatService(ICatApiService catApiService)
     {
         _catApiService = catApiService;
@@ -21,17 +20,15 @@ public class CatService : ICatService
         if (response.IsSuccessStatusCode)
         {
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var catData = JsonSerializer.Deserialize<CatResponse>(jsonResponse);
+            var catData = JsonSerializer.Deserialize<CatResponse>(jsonResponse); // TODO Еще сама модель CatResponse. Прочитай про рекорды https://metanit.com/sharp/tutorial/3.51.php
 
             var imageResponse = await _catApiService.GetCatByIdAsync(catData.id);
             var imageBytes = await imageResponse.Content.ReadAsByteArrayAsync();
-
-            i++;
         
             return new Cat
             {
-                Id = i,
-                Tags = catData.tags,
+                Id = catData.id,
+                Tags = catData.tags.ToList(),
                 ImageBytes = imageBytes
             };
         }

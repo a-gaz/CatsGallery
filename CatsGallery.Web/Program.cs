@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<ICatApiService, CatApiService>();
 builder.Services.AddScoped<ICatService, CatService>();
-
+// TODO IGalleryState не должен быть синглтоном, попробуй открыть в двух вкаладках и увидишь баг. Это должно быть Scoped
 builder.Services.AddSingleton<IGalleryState, GalleryState>();
 
 

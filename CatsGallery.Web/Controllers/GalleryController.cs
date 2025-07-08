@@ -27,7 +27,7 @@ public class GalleryController : Controller
     public async Task<IActionResult> NextCat()
     {
         await _galleryState.AddNewCatAsync();
-        
+        // TODO Тут ты мутируешь стейт по какой-то логике снаружи стейта, в контроллере. Так делать нельзя
         _galleryState.CurrIndex = (_galleryState.CurrIndex + 1) % _galleryState.Cats.Count;
         
         var model = BuildViewModel();
@@ -35,7 +35,8 @@ public class GalleryController : Controller
     }
     
     public async Task<IActionResult> PrevCat()
-    {
+    { 
+        // TODO Тут ты мутируешь стейт по какой-то логике снаружи стейта, в контроллере. Так делать нельзя
         _galleryState.CurrIndex = (_galleryState.CurrIndex - 1 + _galleryState.Cats.Count) % _galleryState.Cats.Count;
         
         var model = BuildViewModel();
@@ -49,7 +50,7 @@ public class GalleryController : Controller
         
         int prevIndex = (currentIndex - 1 + cats.Count) % cats.Count;
         int nextIndex = (currentIndex + 1) % cats.Count;
-        
+        // TODO Еще у тебя в карусели при тыке каждый раз все три картинки загружаются. Надо как-то иначе это делать. Мб сохранять их на диск и сделать обычные урлы. Надо тут подумать
         return new GalleryViewModel
         {
             PrevCat = cats[prevIndex],
