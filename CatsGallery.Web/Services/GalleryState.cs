@@ -5,33 +5,31 @@ namespace CatsGallery.Web.Services;
 
 public class GalleryState : IGalleryState
 {
-    private readonly IServiceProvider _serviceProvider;
-    
-    public int CurrIndex { get; set; }
-    
-    public GalleryState(IServiceProvider serviceProvider)
+    private ICatService _catService;
+    public GalleryState(ICatService catService)
     {
-        _serviceProvider = serviceProvider;
+        _catService = catService;
     }
     
-    public async Task<List<Cat>> InitializeAsync(int count)
+    public async Task<Cat[]> InitializeAsync(int count)
     {
-        var cats = new List<Cat>();
+        var cats = new Cat[count];
         
-        while (cats.Count < count)
-        {
-            cats.Add(await AddNewCatAsync());
-        }
+        var indices = Enumerable.Range(0, count).ToArray();
+        
+        await Parallel.ForEachAsync(
+            indices, 
+            async (i,ct ) => 
+            {
+                cats[i] = await AddNewCatAsync();
+            });
 
         return cats;
     }
 
     public async Task<Cat> AddNewCatAsync()
     {
-        using var scope = _serviceProvider.CreateScope();
-        var catService = scope.ServiceProvider.GetRequiredService<ICatService>();
-        
-        var cat = await catService.GetRandomCatAsync();
+        var cat = await _catService.GetRandomCatAsync();
         
         return cat;
     }

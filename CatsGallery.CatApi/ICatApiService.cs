@@ -1,4 +1,4 @@
-using CatsGallery.Application.Models;
+using CatsGallery.Gateway.Models;
 
 namespace CatsGallery.Gateway;
 

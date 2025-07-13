@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace CatsGallery.Application.Models;
+namespace CatsGallery.Gateway.Models;
 
 public record CatResponse
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }
     [JsonPropertyName("tags")]
-    public IEnumerable<string> Tags { get; set; }
+    public IReadOnlyList<string> Tags { get; set; }
 }
