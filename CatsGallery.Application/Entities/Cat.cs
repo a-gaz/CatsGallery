@@ -1,4 +1,4 @@
-namespace CatsGallery.Application.Models;
+namespace CatsGallery.Application.Entities;
 
 public class Cat
 {

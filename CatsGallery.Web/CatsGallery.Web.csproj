@@ -8,11 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CatsGallery.Application\CatsGallery.Application.csproj" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.6" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.6" />
+      <ProjectReference Include="..\CatsGallery.Infrastructure\CatsGallery.Infrastructure.csproj" />
+      <ProjectReference Include="..\CatsGallery.Shared\CatsGallery.Shared.csproj" />
     </ItemGroup>
 
 </Project>

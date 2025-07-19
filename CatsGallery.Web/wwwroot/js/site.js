@@ -1,6 +1,4 @@
-﻿// TODO > jquery в 2025 ладно. Ну жквери не нужен потому что это все есть в современном  чистом js
-
-class CatGallery {
+﻿class CatGallery {
     constructor() {
         this.photoLoadOffset = 1;
         this.currentIndex = 1;

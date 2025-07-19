@@ -1,0 +1,15 @@
+{
+  "database": {
+    "connection_string": "server=localhost;port=5432;database=training_db;User Id=postgres;password=272727;"
+  },
+
+  "minio": {
+    "endpoint": "play.min.io",
+    "access_key": "minioadmin",
+    "secret_key": "minioadmin"
+  },
+
+  "util":{
+    "cats_num_in_page": 10
+  }
+}

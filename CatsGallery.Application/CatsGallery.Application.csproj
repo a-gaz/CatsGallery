@@ -6,8 +6,4 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\CatsGallery.CatApi\CatsGallery.CatApi.csproj" />
-    </ItemGroup>
-
 </Project>

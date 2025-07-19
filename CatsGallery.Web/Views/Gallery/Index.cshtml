@@ -1,6 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Cats Gallery";
+    ViewData["Title"] = "Gallery";
+    var userId = ViewData["CurrentUserId"] as string;
 }
+
+<p>CurrentUserId: <strong>@userId</strong></p>
 
 <div class="container">
     <div class="photo-container">
@@ -25,4 +28,3 @@
         </button>
     </div>
 </div>
-
