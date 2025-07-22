@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CatGallery2.Application\CatGallery2.Application.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.CatApi\CatGallery2.Infrastructure.CatApi.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.Minio\CatGallery2.Infrastructure.Minio.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.PostgresStorage\CatGallery2.Infrastructure.PostgresStorage.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.RedisStorage\CatGallery2.Infrastructure.RedisStorage.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\images\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.7" />
+    </ItemGroup>
+
+</Project>
