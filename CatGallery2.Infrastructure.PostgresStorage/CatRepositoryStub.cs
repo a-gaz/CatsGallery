@@ -53,4 +53,10 @@ internal sealed class CatRepositoryStub : ICatRepository
     {
         return Task.FromResult(_images.Any(x => x.ForeignId == foreignId && x.FileName != null));
     }
+
+    public Task<CatImage[]> GetCatsById(long[] viewedIds, CancellationToken cancellationToken)
+    {
+        var res = _images.Where(x => viewedIds.Contains(x.Id)).ToArray();
+        return Task.FromResult(res); 
+    }
 }

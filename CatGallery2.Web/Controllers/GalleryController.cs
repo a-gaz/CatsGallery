@@ -29,6 +29,20 @@ public class GalleryController : Controller
         
         return View("Index", model);
     }
+
+    public async Task<IActionResult> PrevCat()
+    {
+        var catImages = await _catService.GetPrevCatsAsync(1, Guid.Empty, CancellationToken.None);
+        
+        var model = new GalleryViewModel
+        {
+            PrevCat = catImages[0],
+            CurrCat = catImages[1],
+            NextCat = catImages[2],
+        };
+        
+        return PartialView("GalleryPartial", model);
+    }
     
     public async Task<IActionResult> NextCat()
     {

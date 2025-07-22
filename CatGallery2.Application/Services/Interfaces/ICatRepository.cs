@@ -23,4 +23,6 @@ public interface ICatRepository
     Task<CatImage[]> GetCatsAsync(int pageSize, DateTime from, long[] viewedIds, CancellationToken cancellationToken);
 
     Task<bool> CheckCatHasFileAsync(string foreignId, CancellationToken stoppingToken);
+    
+    Task<CatImage[]> GetCatsById(long[] viewedIds, CancellationToken cancellationToken);
 }

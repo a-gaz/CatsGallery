@@ -13,7 +13,7 @@ public sealed class CatService : ICatService
     private readonly ILogger<CatService> _logger;
     
     private List<CatImage> _catImages = new List<CatImage>();
-    
+    private int _idx = 0;
     public CatService(ICatProvider catProvider, ICatRepository catRepository, IViewsRepository viewsRepository, 
         ICatImageUploadQueue catImageUploadQueue, ILogger<CatService> logger)
     {
@@ -24,6 +24,30 @@ public sealed class CatService : ICatService
         _logger = logger;
     }
 
+    
+    public async Task<CatImage[]> GetPrevCatsAsync(int catsNum, Guid userId, CancellationToken cancellationToken)
+    {
+        var prevIdx = _idx - 2;
+        if (prevIdx <= 0)
+        {
+            throw new Exception("Это конец!");
+        }
+        
+        if (_catImages.Count >= catsNum)
+        {
+            _catImages = _catImages.Take(_catImages.Count - catsNum).ToList();
+        }
+        
+        var prevCatsIds = (await _viewsRepository.GetByUserAsync(userId, cancellationToken))[prevIdx];
+        
+        var prevCats = await _catRepository.GetCatsById([prevCatsIds], cancellationToken);
+
+        _catImages.InsertRange(0, prevCats);
+
+        --_idx;
+        return _catImages.ToArray();
+    }
+    
     public async Task<CatImage[]> GetNextCatsAsync(int catsNum, DateTime from, Guid userId, CancellationToken cancellationToken)
     {
         if (_catImages.Count >= catsNum)
@@ -36,7 +60,8 @@ public sealed class CatService : ICatService
         await RegisterViewsAsync(userId, newCats, cancellationToken);
         
         _catImages.AddRange(newCats);
-        
+
+        ++_idx;
         return _catImages.ToArray();
     }
 
