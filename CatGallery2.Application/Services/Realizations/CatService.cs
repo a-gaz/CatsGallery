@@ -12,8 +12,6 @@ public sealed class CatService : ICatService
     private readonly ICatImageUploadQueue _catImageUploadQueue;
     private readonly ILogger<CatService> _logger;
     
-    private List<CatImage> _catImages = new List<CatImage>();
-    private int _idx = 0;
     public CatService(ICatProvider catProvider, ICatRepository catRepository, IViewsRepository viewsRepository, 
         ICatImageUploadQueue catImageUploadQueue, ILogger<CatService> logger)
     {
@@ -23,83 +21,109 @@ public sealed class CatService : ICatService
         _catImageUploadQueue = catImageUploadQueue;
         _logger = logger;
     }
-
     
     public async Task<CatImage[]> GetPrevCatsAsync(int catsNum, Guid userId, CancellationToken cancellationToken)
     {
-        var prevIdx = _idx - 2;
-        if (prevIdx <= 0)
+        var prevCatsIds = await _viewsRepository.GetByUserAsync(userId, cancellationToken); 
+        var currIndex = await _viewsRepository.GetUserCurrCatViewIndexAsync(userId, cancellationToken);
+        
+        if (prevCatsIds.Length == 0 || currIndex == -1)
         {
-            throw new Exception("Это конец!");
+            throw new Exception("Нет предыдущих котов!"); // todo придумать как это обработать
         }
-        
-        if (_catImages.Count >= catsNum)
-        {
-            _catImages = _catImages.Take(_catImages.Count - catsNum).ToList();
-        }
-        
-        var prevCatsIds = (await _viewsRepository.GetByUserAsync(userId, cancellationToken))[prevIdx];
-        
-        var prevCats = await _catRepository.GetCatsById([prevCatsIds], cancellationToken);
 
-        _catImages.InsertRange(0, prevCats);
+        var newIndex = Math.Max(0, currIndex - catsNum);
+        await _viewsRepository.SetUserCurrCatViewIndexAsync(userId, newIndex, cancellationToken);
 
-        --_idx;
-        return _catImages.ToArray();
+        return await GetCatsAroundIndex(newIndex, prevCatsIds, cancellationToken);
     }
     
     public async Task<CatImage[]> GetNextCatsAsync(int catsNum, DateTime from, Guid userId, CancellationToken cancellationToken)
     {
-        if (_catImages.Count >= catsNum)
-        {
-            _catImages = _catImages.TakeLast(_catImages.Count - catsNum).ToList();
-        }
-        
         var newCats = await FetchNewImagesAsync(catsNum, from, userId, cancellationToken);
         
-        await RegisterViewsAsync(userId, newCats, cancellationToken);
+        await _viewsRepository.AddAsync(userId, newCats, cancellationToken);
+        var catImageIds = await _viewsRepository.GetByUserAsync(userId, cancellationToken);
         
-        _catImages.AddRange(newCats);
+        var currIndex = await _viewsRepository.GetUserCurrCatViewIndexAsync(userId, cancellationToken);
+        var newIndex = currIndex == -1 ? Math.Max(0, (newCats.Length - 1) - 1) : Math.Max(0, currIndex + catsNum);
+        
+        await _viewsRepository.SetUserCurrCatViewIndexAsync(userId, newIndex, cancellationToken);
+        
+        var cats = await GetCatsAroundIndex(newIndex, catImageIds, cancellationToken);
 
-        ++_idx;
-        return _catImages.ToArray();
+        WaitForAll(cats.ToArray());
+        return cats.ToArray();
     }
 
     private async Task<CatImage[]> FetchNewImagesAsync(int catsNum, DateTime from, Guid userId, CancellationToken cancellationToken)
     {
         // к базе
         var viewedCats = await _viewsRepository.GetByUserAsync(userId, cancellationToken);
-        var cats = await _catRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
+        var catsFromDb = await _catRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
         // к api
-        if (cats.Length < catsNum)
+        if (catsFromDb.Length < catsNum)
         {
             await LoadNewCatsAsync(cancellationToken);
-            cats = await _catRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
+            catsFromDb = await _catRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
         }
 
-        return cats;
+        return catsFromDb;
     }
 
     private async Task LoadNewCatsAsync(CancellationToken cancellationToken)
     {
-        var newCats = await _catProvider.GetRandomCatsOneByOneAsync(10, cancellationToken);
+        var catsFromApi = await _catProvider.GetRandomCatsOneByOneAsync(10, cancellationToken);
         
-        foreach (var newCat in newCats)
+        foreach (var cat in catsFromApi)
         {
-            var isAddedToDb = await _catRepository.AddCatAsync(newCat.Id, cancellationToken);
+            var isAddedToDb = await _catRepository.AddCatAsync(cat.Id, cancellationToken);
             if(isAddedToDb)
             {
-                await _catImageUploadQueue.EnqueueAsync(newCat.Id, cancellationToken);
+                await _catImageUploadQueue.EnqueueAsync(cat.Id, cancellationToken);
             }
         }
     }
     
-    private async Task RegisterViewsAsync(Guid userId, IEnumerable<CatImage> newCats, CancellationToken cancellationToken)
+    private void WaitForAll(CatImage[] catImages)
     {
-        foreach (var cat in newCats)
+        foreach (var catImage in catImages)
         {
-            var viewedCat = new UserViewedCat(userId, cat.Id);
-            await _viewsRepository.AddAsync(viewedCat, cancellationToken);
+            while (catImage.FileName == null)
+            {
+                Thread.Sleep(10);
+            }
         }
+    }
+
+    private async Task<CatImage[]> GetCatsAroundIndex(long currIndex, long[] viewedCatIds, CancellationToken cancellationToken)
+    {
+        var catIdsToFetch = new List<long>();
+
+        var hasPrev = currIndex - 1 >= 0;
+        var hasCurr = currIndex >= 0 && currIndex < viewedCatIds.Length;
+        var hasNext = currIndex + 1 < viewedCatIds.Length;
+
+        if (hasPrev)
+        {
+            catIdsToFetch.Add(viewedCatIds[currIndex - 1]);
+        }
+        if (hasCurr)
+        {
+            catIdsToFetch.Add(viewedCatIds[currIndex]);
+        }
+        if (hasNext)
+        {
+            catIdsToFetch.Add(viewedCatIds[currIndex + 1]);
+        }
+        
+        var fetchedCats = await _catRepository.GetCatsById(catIdsToFetch.ToArray(), cancellationToken);
+        CatImage FindCatById(long id) => fetchedCats.FirstOrDefault(c => c.Id == id);
+        
+        var prevCat = hasPrev ? FindCatById(viewedCatIds[currIndex - 1]) : null;
+        var currCat = hasCurr ? FindCatById(viewedCatIds[currIndex]) : null;
+        var nextCat = hasNext ? FindCatById(viewedCatIds[currIndex + 1]) : null;
+        
+        return new [] { prevCat, currCat, nextCat };
     }
 }

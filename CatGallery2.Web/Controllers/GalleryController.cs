@@ -8,71 +8,72 @@ namespace CatGallery2.Web.Controllers;
 public class GalleryController : Controller
 {
     private readonly ICatService _catService;
+    private readonly ILogger<GalleryController> _logger;
     
-    public GalleryController(ICatService  catService)
+    public GalleryController(ICatService  catService, ILogger<GalleryController> logger)
     {
         _catService = catService;
+        _logger = logger;
     }
 
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        var catImages = await _catService.GetNextCatsAsync(3, DateTime.MinValue, Guid.Empty, cancellationToken);
-        
-        WaitForAll(catImages);
-
-        var model = new GalleryViewModel
+        try
         {
-            PrevCat = catImages[0],
-            CurrCat = catImages[1],
-            NextCat = catImages[2],
-        };
+            var catImages = await _catService.GetNextCatsAsync(3, DateTime.MinValue, Guid.Empty, cancellationToken);
+
+            var model = BuildModel(catImages);
         
-        return View("Index", model);
+            return View("Index", model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return View("Error", ex);
+        }
     }
 
     public async Task<IActionResult> PrevCat()
     {
-        var catImages = await _catService.GetPrevCatsAsync(1, Guid.Empty, CancellationToken.None);
-        
-        var model = new GalleryViewModel
+        try
         {
-            PrevCat = catImages[0],
-            CurrCat = catImages[1],
-            NextCat = catImages[2],
-        };
-        
-        return PartialView("GalleryPartial", model);
+            var catImages = await _catService.GetPrevCatsAsync(1, Guid.Empty, CancellationToken.None);
+            
+            var model = BuildModel(catImages);
+            
+            return PartialView("GalleryPartial", model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return View("Error", ex);
+        }
     }
     
     public async Task<IActionResult> NextCat()
     {
-        var catImages = await _catService.GetNextCatsAsync(1, DateTime.MinValue, Guid.Empty, CancellationToken.None);
-        
-        WaitForAll(catImages);
-       
-        var model = new GalleryViewModel
+        try
+        {
+            var catImages = await _catService.GetNextCatsAsync(1, DateTime.MinValue, Guid.Empty, CancellationToken.None);
+
+            var model = BuildModel(catImages);
+
+            return PartialView("GalleryPartial", model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message); 
+            return View("Error", ex);
+        }
+    }
+    
+    private static GalleryViewModel BuildModel(CatImage[] catImages)
+    {
+        return new GalleryViewModel
         {
             PrevCat = catImages[0],
             CurrCat = catImages[1],
             NextCat = catImages[2],
         };
-
-        return PartialView("GalleryPartial", model);
-    }
-
-    private void WaitForAll(CatImage[] catImages)
-    {
-        if (catImages.Length < 3)
-        {
-            throw new Exception("No more cats!");
-        }
-        
-        foreach (var catImage in catImages)
-        {
-            while (catImage.FileName == null)
-            {
-                Thread.Sleep(20);
-            }
-        }
     }
 }
