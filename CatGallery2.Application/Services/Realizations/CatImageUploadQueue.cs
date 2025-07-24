@@ -16,6 +16,7 @@ public class CatImageUploadQueue : ICatImageUploadQueue
         };
         _channel = Channel.CreateUnbounded<string>(options);
     }
+    
     public async Task EnqueueAsync(string foreignCatId, CancellationToken cancellationToken)
     {
         await _channel.Writer.WriteAsync(foreignCatId, cancellationToken);

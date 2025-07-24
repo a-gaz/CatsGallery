@@ -7,16 +7,16 @@ namespace CatGallery2.Application.Services.Realizations;
 public sealed class CatService : ICatService
 {
     private readonly ICatProvider _catProvider;
-    private readonly ICatRepository _catRepository;
+    private readonly ICatImageRepository _catImageRepository;
     private readonly IViewsRepository _viewsRepository;
     private readonly ICatImageUploadQueue _catImageUploadQueue;
     private readonly ILogger<CatService> _logger;
     
-    public CatService(ICatProvider catProvider, ICatRepository catRepository, IViewsRepository viewsRepository, 
+    public CatService(ICatProvider catProvider, ICatImageRepository catImageRepository, IViewsRepository viewsRepository, 
         ICatImageUploadQueue catImageUploadQueue, ILogger<CatService> logger)
     {
         _catProvider = catProvider;
-        _catRepository = catRepository;
+        _catImageRepository = catImageRepository;
         _viewsRepository = viewsRepository;
         _catImageUploadQueue = catImageUploadQueue;
         _logger = logger;
@@ -60,12 +60,12 @@ public sealed class CatService : ICatService
     {
         // к базе
         var viewedCats = await _viewsRepository.GetByUserAsync(userId, cancellationToken);
-        var catsFromDb = await _catRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
+        var catsFromDb = await _catImageRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
         // к api
         if (catsFromDb.Length < catsNum)
         {
             await LoadNewCatsAsync(cancellationToken);
-            catsFromDb = await _catRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
+            catsFromDb = await _catImageRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
         }
 
         return catsFromDb;
@@ -77,7 +77,7 @@ public sealed class CatService : ICatService
         
         foreach (var cat in catsFromApi)
         {
-            var isAddedToDb = await _catRepository.AddCatAsync(cat.Id, cancellationToken);
+            var isAddedToDb = await _catImageRepository.AddCatAsync(cat.Id, cancellationToken);
             if(isAddedToDb)
             {
                 await _catImageUploadQueue.EnqueueAsync(cat.Id, cancellationToken);
@@ -117,7 +117,7 @@ public sealed class CatService : ICatService
             catIdsToFetch.Add(viewedCatIds[currIndex + 1]);
         }
         
-        var fetchedCats = await _catRepository.GetCatsById(catIdsToFetch.ToArray(), cancellationToken);
+        var fetchedCats = await _catImageRepository.GetCatsById(catIdsToFetch.ToArray(), cancellationToken);
         CatImage FindCatById(long id) => fetchedCats.FirstOrDefault(c => c.Id == id);
         
         var prevCat = hasPrev ? FindCatById(viewedCatIds[currIndex - 1]) : null;

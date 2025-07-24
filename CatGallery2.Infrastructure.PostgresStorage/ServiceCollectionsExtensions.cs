@@ -1,4 +1,5 @@
 ﻿using CatGallery2.Application.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,13 @@ public static class ServiceCollectionsExtensions
 {
     public static void AddPostgresStorage(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<ICatRepository, CatRepositoryStub>();
+        var options = configuration.GetRequiredSection(PostgreRepositoryOptions.SectionName).Get<PostgreRepositoryOptions>();
+        
+        services.AddDbContext<ApplicationDbContext>(opts =>
+        {
+            opts.UseNpgsql(options.ConnectionString);
+        });
+        
+        services.AddScoped<ICatImageRepository, CatImageRepository>();
     }
 }

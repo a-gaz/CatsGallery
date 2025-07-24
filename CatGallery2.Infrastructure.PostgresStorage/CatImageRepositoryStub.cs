@@ -3,7 +3,7 @@ using CatGallery2.Application.Services.Interfaces;
 
 namespace CatGallery2.Infrastructure.PostgresStorage;
 
-internal sealed class CatRepositoryStub : ICatRepository
+internal sealed class CatImageRepositoryStub : ICatImageRepository
 {
     private readonly List<CatImage> _images = new List<CatImage>();
     private long _counter = 1;

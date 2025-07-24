@@ -2,7 +2,7 @@
 
 namespace CatGallery2.Application.Services.Interfaces;
 
-public interface ICatRepository
+public interface ICatImageRepository
 {
     /// <summary>
     ///

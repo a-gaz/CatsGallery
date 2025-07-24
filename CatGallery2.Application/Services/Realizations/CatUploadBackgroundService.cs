@@ -1,34 +1,50 @@
 ﻿using CatGallery2.Application.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace CatGallery2.Application.Services.Realizations;
 
 public sealed class CatUploadBackgroundService : BackgroundService
 {
     private readonly ICatImageUploadQueue _catImageUploadQueue;
-    private readonly IImageStorage _imageStorage;
-    private readonly ICatRepository _catRepository;
-    private readonly ICatProvider _catProvider;
-
-    public CatUploadBackgroundService(ICatRepository catRepository, IImageStorage imageStorage, ICatImageUploadQueue catImageUploadQueue, ICatProvider catProvider)
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<CatUploadBackgroundService> _logger;
+    public CatUploadBackgroundService(ICatImageUploadQueue catImageUploadQueue, IServiceProvider serviceProvider, 
+        ILogger<CatUploadBackgroundService> logger)
     {
-        _catRepository = catRepository;
-        _imageStorage = imageStorage;
         _catImageUploadQueue = catImageUploadQueue;
-        _catProvider = catProvider;
+        _serviceProvider = serviceProvider;
+        _logger = logger;
     }
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await foreach (var foreignId in _catImageUploadQueue.GetAll(stoppingToken))
         {
-            var imageIsAdded = await _catRepository.CheckCatHasFileAsync(foreignId, stoppingToken);
-            if (!imageIsAdded)
+            using var scope = _serviceProvider.CreateScope();
+            var catImageRepository = scope.ServiceProvider.GetRequiredService<ICatImageRepository>();
+            var imageStorage = scope.ServiceProvider.GetRequiredService<IImageStorage>();
+            var catProvider = scope.ServiceProvider.GetRequiredService<ICatProvider>();
+
+            try
             {
-                var image = await _catProvider.GetImageByIdAsync(foreignId, stoppingToken);
-                var fileName = await _imageStorage.UploadImageAsync(image, stoppingToken);
-                
-                await _catRepository.AddCatImageAsync(foreignId, fileName, stoppingToken);
+                var imageIsAdded = await catImageRepository.CheckCatHasFileAsync(foreignId, stoppingToken);
+                    
+                if (!imageIsAdded)
+                {
+                    var image = await catProvider.GetImageByIdAsync(foreignId, stoppingToken);
+                    if (image != null)
+                    {
+                        var fileName = await imageStorage.UploadImageAsync(image, stoppingToken);
+                            
+                        await catImageRepository.AddCatImageAsync(foreignId, fileName, stoppingToken);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Ошибка при обработке foreignId: {foreignId}");
             }
         }
     }

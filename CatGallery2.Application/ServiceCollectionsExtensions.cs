@@ -10,7 +10,7 @@ public static class ServiceCollectionsExtensions
     public static void AddApp(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<ICatImageUploadQueue, CatImageUploadQueue>();
-        services.AddSingleton<ICatService, CatService>();
+        services.AddScoped<ICatService, CatService>();
         services.AddHostedService<CatUploadBackgroundService>();
     }
 }

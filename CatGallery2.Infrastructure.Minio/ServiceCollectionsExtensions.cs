@@ -8,6 +8,6 @@ public static class ServiceCollectionsExtensions
 {
     public static void AddMinio(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<IImageStorage, MinioImageStorageStub>();
+        services.AddScoped<IImageStorage, MinioImageStorageStub>();
     }
 }
