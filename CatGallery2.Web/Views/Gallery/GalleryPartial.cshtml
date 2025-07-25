@@ -5,13 +5,16 @@
 <div class="container">
     <div class="photo-container">
         <div>
-            <img src="@("/images/" + Model.PrevCat.FileName)" class="photo-container prev-photo" alt="Previous Cat"/>
+            <img src="@Url.Action("GetLink", "Gallery", new { fileName = Model.PrevCat.FileName })" 
+                 class="photo-container prev-photo" alt="Prev Cat"/>
         </div>
         <div>
-            <img src="@("/images/" + Model.CurrCat.FileName)" class="photo-container current-photo" alt="Current Cat"/>
+            <img src="@Url.Action("GetLink", "Gallery", new { fileName = Model.CurrCat.FileName })" 
+                 class="photo-container current-photo" alt="Curr Cat"/>
         </div>
         <div>
-            <img src="@("/images/" + Model.NextCat.FileName)" class="photo-container next-photo" alt="Next Cat"/>
+            <img src="@Url.Action("GetLink", "Gallery", new { fileName = Model.NextCat.FileName })" 
+                 class="photo-container next-photo" alt="Next Cat"/>
         </div>
     </div>
 

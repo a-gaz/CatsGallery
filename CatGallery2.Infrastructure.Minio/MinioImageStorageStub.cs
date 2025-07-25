@@ -4,6 +4,13 @@ namespace CatGallery2.Infrastructure.Minio;
 
 internal sealed class MinioImageStorageStub : IImageStorage
 {
+    private IImageStorage _imageStorageImplementation;
+
+    public Task BucketExists(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+    
     public async Task<string> UploadImageAsync(Stream file, CancellationToken cancellationToken)
     {
         var fileName = Guid.NewGuid() + ".jpg";
@@ -12,7 +19,17 @@ internal sealed class MinioImageStorageStub : IImageStorage
         {
             await file.CopyToAsync(fileStream, cancellationToken);
         }
-        
+
         return fileName;
+    }
+
+    public Task<string> GetPresignedUrlAsync(string fileName, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DownloadImageAsync(string fileName, Stream outputStream, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -10,16 +10,28 @@ public sealed class CatService : ICatService
     private readonly ICatImageRepository _catImageRepository;
     private readonly IViewsRepository _viewsRepository;
     private readonly ICatImageUploadQueue _catImageUploadQueue;
+    private readonly IImageStorage _cacheImageStorage;
     private readonly ILogger<CatService> _logger;
     
-    public CatService(ICatProvider catProvider, ICatImageRepository catImageRepository, IViewsRepository viewsRepository, 
-        ICatImageUploadQueue catImageUploadQueue, ILogger<CatService> logger)
+    public CatService(
+        ICatProvider catProvider, 
+        ICatImageRepository catImageRepository, 
+        IViewsRepository viewsRepository, 
+        ICatImageUploadQueue catImageUploadQueue,
+        IImageStorage cacheImageStorage,
+        ILogger<CatService> logger)
     {
         _catProvider = catProvider;
         _catImageRepository = catImageRepository;
         _viewsRepository = viewsRepository;
         _catImageUploadQueue = catImageUploadQueue;
+        _cacheImageStorage = cacheImageStorage;
         _logger = logger;
+    }
+    
+    public async Task InitializeAsync(CancellationToken cancellationToken)
+    {
+        await _cacheImageStorage.BucketExists(cancellationToken);
     }
     
     public async Task<CatImage[]> GetPrevCatsAsync(int catsNum, Guid userId, CancellationToken cancellationToken)
@@ -29,7 +41,7 @@ public sealed class CatService : ICatService
         
         if (prevCatsIds.Length == 0 || currIndex == -1)
         {
-            throw new Exception("Нет предыдущих котов!"); // todo придумать как это обработать
+            throw new Exception("Нет котов!");
         }
 
         var newIndex = Math.Max(0, currIndex - catsNum);
@@ -37,7 +49,7 @@ public sealed class CatService : ICatService
 
         return await GetCatsAroundIndex(newIndex, prevCatsIds, cancellationToken);
     }
-    
+
     public async Task<CatImage[]> GetNextCatsAsync(int catsNum, DateTime from, Guid userId, CancellationToken cancellationToken)
     {
         var newCats = await FetchNewImagesAsync(catsNum, from, userId, cancellationToken);
@@ -55,19 +67,25 @@ public sealed class CatService : ICatService
         WaitForAll(cats.ToArray());
         return cats.ToArray();
     }
-
+    
     private async Task<CatImage[]> FetchNewImagesAsync(int catsNum, DateTime from, Guid userId, CancellationToken cancellationToken)
     {
-        // к базе
         var viewedCats = await _viewsRepository.GetByUserAsync(userId, cancellationToken);
         var catsFromDb = await _catImageRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
-        // к api
+
         if (catsFromDb.Length < catsNum)
         {
             await LoadNewCatsAsync(cancellationToken);
             catsFromDb = await _catImageRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
         }
-
+        else
+        {
+            foreach (var cat in catsFromDb)
+            {
+                await _catImageUploadQueue.EnqueueAsync(cat.ForeignId, cancellationToken);
+            }
+        }
+        
         return catsFromDb;
     }
 
@@ -94,6 +112,14 @@ public sealed class CatService : ICatService
                 Thread.Sleep(10);
             }
         }
+    }
+
+    public async Task<string> GetUrlAsync(string fileName, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(fileName))
+            throw new ArgumentException("Файла нет!");
+    
+        return await _cacheImageStorage.GetPresignedUrlAsync(fileName, cancellationToken);
     }
 
     private async Task<CatImage[]> GetCatsAroundIndex(long currIndex, long[] viewedCatIds, CancellationToken cancellationToken)

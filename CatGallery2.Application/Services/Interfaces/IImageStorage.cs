@@ -8,5 +8,8 @@ public interface IImageStorage
     /// <param name="file"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>FileName</returns>
-    Task<string> UploadImageAsync(Stream file, CancellationToken cancellationToken);
+    Task BucketExists(CancellationToken cancellationToken);
+    Task<string> UploadImageAsync(Stream fileStream, CancellationToken cancellationToken);
+    Task<string> GetPresignedUrlAsync(string fileName, CancellationToken cancellationToken);
+    Task DownloadImageAsync(string fileName, Stream outputStream, CancellationToken cancellationToken);
 }

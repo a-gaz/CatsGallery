@@ -10,4 +10,9 @@
       <ProjectReference Include="..\CatGallery2.Application\CatGallery2.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
+      <PackageReference Include="Minio" Version="6.0.5" />
+    </ItemGroup>
+
 </Project>

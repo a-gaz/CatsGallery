@@ -2,6 +2,8 @@ using CatGallery2.Application.Services.Entities;
 using CatGallery2.Application.Services.Interfaces;
 using CatGallery2.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Minio;
+using Minio.DataModel.Args;
 
 namespace CatGallery2.Web.Controllers;
 
@@ -9,17 +11,20 @@ public class GalleryController : Controller
 {
     private readonly ICatService _catService;
     private readonly ILogger<GalleryController> _logger;
-    
-    public GalleryController(ICatService  catService, ILogger<GalleryController> logger)
+    private readonly IMinioClient _client;
+    public GalleryController(ICatService  catService, IMinioClient client,  ILogger<GalleryController> logger)
     {
         _catService = catService;
+        _client =  client;
         _logger = logger;
     }
-
+    
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         try
         {
+            await _catService.InitializeAsync(cancellationToken);
+            
             var catImages = await _catService.GetNextCatsAsync(3, DateTime.MinValue, Guid.Empty, cancellationToken);
 
             var model = BuildModel(catImages);
@@ -63,6 +68,21 @@ public class GalleryController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message); 
+            return View("Error", ex);
+        }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetLink(string fileName, CancellationToken cancellationToken)
+    {
+        try
+        {
+            string presignedUrl = await _catService.GetUrlAsync(fileName, cancellationToken);
+            return Redirect(presignedUrl);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
             return View("Error", ex);
         }
     }
