@@ -12,6 +12,8 @@ public static class ServiceCollectionsExtensions
         var options = configuration.GetRequiredSection(MinioRepositoryOptions.SectionName)
             .Get<MinioRepositoryOptions>();
         
+        services.Configure<MinioRepositoryOptions>(configuration.GetSection(MinioRepositoryOptions.SectionName));
+        
         services.AddMinio(opts =>
         {
             opts.WithEndpoint(options.Endpoint);

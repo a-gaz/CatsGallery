@@ -1,5 +1,5 @@
 using CatGallery2.Application.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
 
@@ -10,12 +10,11 @@ internal sealed class MinioCacheImageStorage : IImageStorage
     private readonly string _bucketName;
     private readonly IMinioClient _client;
 
-    public MinioCacheImageStorage(IMinioClient client, IConfiguration configuration)
+    public MinioCacheImageStorage(IMinioClient client, IOptions<MinioRepositoryOptions> options)
     {
         _client = client;
         
-        var options = configuration.GetRequiredSection(MinioRepositoryOptions.SectionName).Get<MinioRepositoryOptions>();
-        _bucketName = options.BucketName;
+        _bucketName = options.Value.BucketName;
     }
     
     public async Task BucketExists(CancellationToken cancellationToken)
@@ -33,9 +32,9 @@ internal sealed class MinioCacheImageStorage : IImageStorage
                     cancellationToken);
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw ex;
+            throw;
         }
     }
 
@@ -44,14 +43,7 @@ internal sealed class MinioCacheImageStorage : IImageStorage
         try
         {
             var fileName = $"{Guid.NewGuid()}.jpg";
-        
-            // await _client.PutObjectAsync(
-            //     new PutObjectArgs()
-            //         .WithBucket(_bucketName)
-            //         .WithObject(fileName)
-            //         .WithStreamData(fileStream)
-            //         .WithContentType("image/jpeg"),
-            //     cancellationToken);
+            
             await _client.PutObjectAsync(new PutObjectArgs()
                 .WithBucket(_bucketName)
                 .WithObject(fileName)
@@ -61,9 +53,9 @@ internal sealed class MinioCacheImageStorage : IImageStorage
 
             return fileName;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw ex;
+            throw;
         }
     }
     
@@ -79,9 +71,9 @@ internal sealed class MinioCacheImageStorage : IImageStorage
             string url = await _client.PresignedGetObjectAsync(args);
             return url;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw ex;
+            throw;
         }
     }
 
@@ -106,9 +98,9 @@ internal sealed class MinioCacheImageStorage : IImageStorage
     
             await _client.GetObjectAsync(getObjectArgs, cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw ex;
+            throw;
         }
     }
 }

@@ -65,7 +65,7 @@ public sealed class CatService : ICatService
         var cats = await GetCatsAroundIndex(newIndex, catImageIds, cancellationToken);
 
         WaitForAll(cats.ToArray());
-        return cats.ToArray();
+        return cats;
     }
     
     private async Task<CatImage[]> FetchNewImagesAsync(int catsNum, DateTime from, Guid userId, CancellationToken cancellationToken)
@@ -109,7 +109,7 @@ public sealed class CatService : ICatService
         {
             while (catImage.FileName == null)
             {
-                Thread.Sleep(10);
+                Task.Delay(10);
             }
         }
     }

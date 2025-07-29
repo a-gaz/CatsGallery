@@ -2,8 +2,6 @@ using CatGallery2.Application.Services.Entities;
 using CatGallery2.Application.Services.Interfaces;
 using CatGallery2.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Minio;
-using Minio.DataModel.Args;
 
 namespace CatGallery2.Web.Controllers;
 
@@ -11,11 +9,10 @@ public class GalleryController : Controller
 {
     private readonly ICatService _catService;
     private readonly ILogger<GalleryController> _logger;
-    private readonly IMinioClient _client;
-    public GalleryController(ICatService  catService, IMinioClient client,  ILogger<GalleryController> logger)
+
+    public GalleryController(ICatService  catService, ILogger<GalleryController> logger)
     {
         _catService = catService;
-        _client =  client;
         _logger = logger;
     }
     

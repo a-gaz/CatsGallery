@@ -11,8 +11,11 @@ public static class ServiceCollectionsExtensions
     {
         var options = configuration.GetRequiredSection(RedisRepositoryOptions.SectionName).Get<RedisRepositoryOptions>();
         
+        services.Configure<RedisRepositoryOptions>(configuration.GetSection(RedisRepositoryOptions.SectionName));
+        
         services.AddScoped<IViewsRepository, CachingRepository>();
         services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(options.ConnectionString));
-        services.AddHostedService<CachingStartupService>();
+        
+        // services.AddHostedService<CachingStartupService>();
     }
 }

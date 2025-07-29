@@ -1,6 +1,7 @@
 using CatGallery2.Application.Services.Entities;
 using CatGallery2.Application.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
 namespace CatGallery2.Infrastructure.RedisStorage;
@@ -13,12 +14,11 @@ internal sealed class CachingRepository : IViewsRepository
     private const string KeyViewsDb = "userviews:";
     private const string KeyPointersDb = "userpointers:";
 
-    public CachingRepository(IConnectionMultiplexer distributedCache, IConfiguration configuration)
+    public CachingRepository(IConnectionMultiplexer distributedCache, IOptions<RedisRepositoryOptions> options)
     {
         _cache = distributedCache.GetDatabase();
         
-        var options = configuration.GetRequiredSection(RedisRepositoryOptions.SectionName).Get<RedisRepositoryOptions>();
-        _defaultExpiration = TimeSpan.FromMinutes(options.DefaultExpiration);
+        _defaultExpiration = TimeSpan.FromMinutes(options.Value.DefaultExpiration);
     }
     
     public async Task AddAsync(Guid userId, CatImage[] catImages, CancellationToken cancellationToken)

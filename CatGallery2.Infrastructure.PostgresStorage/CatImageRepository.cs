@@ -26,9 +26,9 @@ public sealed class CatImageRepository : ICatImageRepository
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw ex;
+            throw;
         }
     }
 
@@ -49,10 +49,10 @@ public sealed class CatImageRepository : ICatImageRepository
 
     public async Task<CatImage[]> GetCatsAsync(int pageSize, DateTime from, long[] viewedIds, CancellationToken cancellationToken)
     {
-        return _context.CatImages.Where(x => !viewedIds.Contains(x.Id))
+        return await _context.CatImages.Where(x => !viewedIds.Contains(x.Id))
             .OrderByDescending(x => x.UploadDate)
             .Take(pageSize)
-            .ToArray();
+            .ToArrayAsync(cancellationToken);
     }
 
     public async Task<bool> CheckCatHasFileAsync(string foreignId, CancellationToken stoppingToken)
@@ -63,7 +63,7 @@ public sealed class CatImageRepository : ICatImageRepository
 
     public async Task<CatImage[]> GetCatsById(long[] viewedIds, CancellationToken cancellationToken)
     {
-        var res = _context.CatImages.Where(x => viewedIds.Contains(x.Id)).ToArray();
+        var res = await _context.CatImages.Where(x => viewedIds.Contains(x.Id)).ToArrayAsync(cancellationToken);
         return res;
     }
 }
