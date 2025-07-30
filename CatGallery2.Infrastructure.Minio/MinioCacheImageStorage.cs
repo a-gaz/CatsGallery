@@ -49,7 +49,7 @@ internal sealed class MinioCacheImageStorage : IImageStorage
                 .WithObject(fileName)
                 .WithStreamData(fileStream)
                 .WithObjectSize(fileStream.Length)
-                .WithContentType("image/jpeg"));
+                .WithContentType("image/jpeg"), cancellationToken);
 
             return fileName;
         }
@@ -70,33 +70,6 @@ internal sealed class MinioCacheImageStorage : IImageStorage
 
             string url = await _client.PresignedGetObjectAsync(args);
             return url;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task DownloadImageAsync(string fileName, Stream outputStream, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var statArgs = new StatObjectArgs()
-                .WithBucket(_bucketName)
-                .WithObject(fileName);
-        
-            await _client.StatObjectAsync(statArgs, cancellationToken);
-    
-            var getObjectArgs = new GetObjectArgs()
-                .WithBucket(_bucketName)
-                .WithObject(fileName)
-                .WithCallbackStream(stream => 
-                {
-                    stream.CopyTo(outputStream);
-                    outputStream.Seek(0, SeekOrigin.Begin);
-                });
-    
-            await _client.GetObjectAsync(getObjectArgs, cancellationToken);
         }
         catch (Exception)
         {
