@@ -95,7 +95,7 @@ public sealed class CatService : ICatService
         
         foreach (var cat in catsFromApi)
         {
-            var isAddedToDb = await _catImageRepository.AddCatAsync(cat.Id, cancellationToken);
+            var isAddedToDb = await _catImageRepository.TryAddCatAsync(cat.Id, cancellationToken);
             if(isAddedToDb)
             {
                 await _catImageUploadQueue.EnqueueAsync(cat.Id, cancellationToken);

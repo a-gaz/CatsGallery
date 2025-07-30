@@ -24,6 +24,6 @@ public static class ServiceCollectionsExtensions
             opts.WithSSL(options.UseSsl);
             opts.Build();
         });
-        services.AddScoped<IImageStorage, MinioCacheImageStorage>();
+        services.AddSingleton<IImageStorage, MinioCacheImageStorage>();
     }
 }

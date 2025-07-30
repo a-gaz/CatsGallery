@@ -17,7 +17,7 @@ public static class ServiceCollectionsExtensions
         
         services.Configure<UserActivityCacheOptions>(configuration.GetSection(UserActivityCacheOptions.SectionName));
         
-        services.AddScoped<IUserActivityRepository, UserActivityCache>();
+        services.AddSingleton<IUserActivityRepository, UserActivityCache>();
         services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(options.ConnectionString));
     }
 }

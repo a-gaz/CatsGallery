@@ -6,64 +6,99 @@ namespace CatGallery2.Infrastructure.PostgresRepository;
 
 internal sealed class CatImageRepository : ICatImageRepository
 {
-    protected readonly ApplicationDbContext _context;
-    private static long _counter = 0;
+    private readonly ApplicationDbContextFactory _contextFactory;
     
-    public CatImageRepository(ApplicationDbContext context)
+    public CatImageRepository(ApplicationDbContextFactory contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
     }
     
-    public async Task<bool> AddCatAsync(string foreignId, CancellationToken cancellationToken)
+    public async Task<bool> TryAddCatAsync(string foreignId, CancellationToken cancellationToken)
     {
-        try
+        await using var context = _contextFactory.CreateDbContext();
+        
+        var inDb = await context.CatImages
+            .FromSqlInterpolated($"""
+                                  SELECT 1 
+                                  FROM "CatImages" 
+                                  WHERE "ForeignId" = {foreignId}
+                                  """)
+            .AnyAsync(cancellationToken);
+        if (inDb)
         {
-            if (await _context.CatImages.AnyAsync(x => x.ForeignId == foreignId, cancellationToken))
-                return false;
-
-            var catImage = new CatImage { ForeignId = foreignId };
-            _context.CatImages.Add(catImage);
-            await _context.SaveChangesAsync(cancellationToken);
-            return true;
+            return false;
         }
-        catch (Exception)
-        {
-            throw;
-        }
+        
+        await context.Database
+            .ExecuteSqlInterpolatedAsync($"""
+                                          INSERT INTO "CatImages" ("ForeignId") 
+                                          VALUES ({foreignId})
+                                          """, 
+            cancellationToken);
+        
+        return true;
     }
 
     public async Task AddCatImageAsync(string foreignId, string fileName, CancellationToken cancellationToken)
-    {
-        var catImage = await _context.CatImages.FirstOrDefaultAsync(x => x.ForeignId == foreignId, cancellationToken);
-        if (catImage != null)
-        {
-            if (catImage.FileName == null)
-            {
-                catImage.FileName = fileName;
-                catImage.UploadDate = DateTime.UtcNow;
-                
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-        }
+    { 
+        await using var context = _contextFactory.CreateDbContext();
+
+        await context.Database
+            .ExecuteSqlInterpolatedAsync($"""
+                                          UPDATE "CatImages" 
+                                          SET "FileName" = {fileName}, 
+                                          "UploadDate" = {DateTime.UtcNow} 
+                                          WHERE "ForeignId" = {foreignId}
+                                          """, 
+                cancellationToken);
     }
 
     public async Task<CatImage[]> GetCatsAsync(int pageSize, DateTime from, long[] viewedIds, CancellationToken cancellationToken)
     {
-        return await _context.CatImages.Where(x => !viewedIds.Contains(x.Id))
-            .OrderByDescending(x => x.UploadDate)
-            .Take(pageSize)
+        await using var context = _contextFactory.CreateDbContext();
+
+        var catImages = await context.CatImages
+            .FromSqlInterpolated($"""
+                                  SELECT * 
+                                  FROM "CatImages" 
+                                  WHERE NOT ("Id" = ANY({viewedIds}))
+                                  ORDER BY "UploadDate" DESC
+                                  LIMIT {pageSize}
+                                  """)
             .ToArrayAsync(cancellationToken);
+        
+        return catImages;
     }
 
     public async Task<bool> CheckCatHasFileAsync(string foreignId, CancellationToken stoppingToken)
     {
-        var res = _context.CatImages.Any(x => x.ForeignId == foreignId && x.FileName != null);
-        return res;
+        await using var context = _contextFactory.CreateDbContext();
+
+        var catImageIsExist = await context.CatImages
+            .FromSqlInterpolated($"""
+                                  SELECT 1 
+                                  FROM "CatImages" 
+                                  WHERE "ForeignId" = {foreignId} AND 
+                                  "FileName" != null 
+                                  LIMIT 1
+                                  """)
+            .AnyAsync(stoppingToken);
+        
+        return catImageIsExist;
     }
 
     public async Task<CatImage[]> GetCatsById(long[] viewedIds, CancellationToken cancellationToken)
     {
-        var res = await _context.CatImages.Where(x => viewedIds.Contains(x.Id)).ToArrayAsync(cancellationToken);
-        return res;
+        await using var context = _contextFactory.CreateDbContext();
+
+        var catImages = await context.CatImages
+            .FromSqlInterpolated($"""
+                                  SELECT * 
+                                  FROM "CatImages" 
+                                  WHERE "Id" = ANY({viewedIds})
+                                  """)
+            .ToArrayAsync(cancellationToken);
+        
+        return catImages;
     }
 }

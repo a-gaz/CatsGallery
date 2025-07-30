@@ -14,7 +14,7 @@ public static class ServiceCollectionsExtensions
             throw new NullReferenceException($"{nameof(CatApiOptions)}.{nameof(CatApiOptions.SectionName)}");
         }
         
-        services.AddScoped<ICatProvider, CatApiService>();
+        services.AddSingleton<ICatProvider, CatApiService>();
         services.AddHttpClient<ICatProvider, CatApiService>(x => x.BaseAddress = new Uri(options.BaseUrl));
     }
 }

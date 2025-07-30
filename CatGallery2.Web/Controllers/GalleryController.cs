@@ -35,11 +35,11 @@ public class GalleryController : Controller
         }
     }
 
-    public async Task<IActionResult> PrevCat()
+    public async Task<IActionResult> PrevCat(CancellationToken cancellationToken)
     {
         try
         {
-            var catImages = await _catService.GetPrevCatsAsync(1, Guid.Empty, CancellationToken.None);
+            var catImages = await _catService.GetPrevCatsAsync(1, Guid.Empty, cancellationToken);
             
             var model = BuildModel(catImages);
             
@@ -52,11 +52,11 @@ public class GalleryController : Controller
         }
     }
     
-    public async Task<IActionResult> NextCat()
+    public async Task<IActionResult> NextCat(CancellationToken cancellationToken)
     {
         try
         {
-            var catImages = await _catService.GetNextCatsAsync(1, DateTime.MinValue, Guid.Empty, CancellationToken.None);
+            var catImages = await _catService.GetNextCatsAsync(1, DateTime.MinValue, Guid.Empty, cancellationToken);
 
             var model = BuildModel(catImages);
 

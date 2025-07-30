@@ -10,7 +10,7 @@ public interface ICatImageRepository
     /// <param name="foreignId">внешний Id кота</param>
     /// <param name="cancellationToken"></param>
     /// <returns>true - добавлен в БД; false - уже есть в БД</returns>
-    Task<bool> AddCatAsync(string foreignId, CancellationToken cancellationToken);
+    Task<bool> TryAddCatAsync(string foreignId, CancellationToken cancellationToken);
     Task AddCatImageAsync(string foreignId, string fileName, CancellationToken cancellationToken);
     /// <summary>
     /// 
