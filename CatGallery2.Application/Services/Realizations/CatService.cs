@@ -8,7 +8,7 @@ public sealed class CatService : ICatService
 {
     private readonly ICatProvider _catProvider;
     private readonly ICatImageRepository _catImageRepository;
-    private readonly IViewsRepository _viewsRepository;
+    private readonly IUserActivityRepository _userActivityRepository;
     private readonly ICatImageUploadQueue _catImageUploadQueue;
     private readonly IImageStorage _cacheImageStorage;
     private readonly ILogger<CatService> _logger;
@@ -16,14 +16,14 @@ public sealed class CatService : ICatService
     public CatService(
         ICatProvider catProvider, 
         ICatImageRepository catImageRepository, 
-        IViewsRepository viewsRepository, 
+        IUserActivityRepository userActivityRepository, 
         ICatImageUploadQueue catImageUploadQueue,
         IImageStorage cacheImageStorage,
         ILogger<CatService> logger)
     {
         _catProvider = catProvider;
         _catImageRepository = catImageRepository;
-        _viewsRepository = viewsRepository;
+        _userActivityRepository = userActivityRepository;
         _catImageUploadQueue = catImageUploadQueue;
         _cacheImageStorage = cacheImageStorage;
         _logger = logger;
@@ -36,8 +36,8 @@ public sealed class CatService : ICatService
     
     public async Task<CatImage[]> GetPrevCatsAsync(int catsNum, Guid userId, CancellationToken cancellationToken)
     {
-        var prevCatsIds = await _viewsRepository.GetByUserAsync(userId, cancellationToken); 
-        var currIndex = await _viewsRepository.GetUserCurrCatViewIndexAsync(userId, cancellationToken);
+        var prevCatsIds = await _userActivityRepository.GetByUserAsync(userId, cancellationToken); 
+        var currIndex = await _userActivityRepository.GetUserCurrCatViewIndexAsync(userId, cancellationToken);
         
         if (prevCatsIds.Length == 0 || currIndex == -1)
         {
@@ -45,7 +45,7 @@ public sealed class CatService : ICatService
         }
 
         var newIndex = Math.Max(0, currIndex - catsNum);
-        await _viewsRepository.SetUserCurrCatViewIndexAsync(userId, newIndex, cancellationToken);
+        await _userActivityRepository.SetUserCurrCatViewIndexAsync(userId, newIndex, cancellationToken);
 
         return await GetCatsAroundIndex(newIndex, prevCatsIds, cancellationToken);
     }
@@ -54,13 +54,13 @@ public sealed class CatService : ICatService
     {
         var newCats = await FetchNewImagesAsync(catsNum, from, userId, cancellationToken);
         
-        await _viewsRepository.AddAsync(userId, newCats, cancellationToken);
-        var catImageIds = await _viewsRepository.GetByUserAsync(userId, cancellationToken);
+        await _userActivityRepository.AddAsync(userId, newCats, cancellationToken);
+        var catImageIds = await _userActivityRepository.GetByUserAsync(userId, cancellationToken);
         
-        var currIndex = await _viewsRepository.GetUserCurrCatViewIndexAsync(userId, cancellationToken);
+        var currIndex = await _userActivityRepository.GetUserCurrCatViewIndexAsync(userId, cancellationToken);
         var newIndex = currIndex == -1 ? Math.Max(0, (newCats.Length - 1) - 1) : Math.Max(0, currIndex + catsNum);
         
-        await _viewsRepository.SetUserCurrCatViewIndexAsync(userId, newIndex, cancellationToken);
+        await _userActivityRepository.SetUserCurrCatViewIndexAsync(userId, newIndex, cancellationToken);
         
         var cats = await GetCatsAroundIndex(newIndex, catImageIds, cancellationToken);
 
@@ -70,7 +70,7 @@ public sealed class CatService : ICatService
     
     private async Task<CatImage[]> FetchNewImagesAsync(int catsNum, DateTime from, Guid userId, CancellationToken cancellationToken)
     {
-        var viewedCats = await _viewsRepository.GetByUserAsync(userId, cancellationToken);
+        var viewedCats = await _userActivityRepository.GetByUserAsync(userId, cancellationToken);
         var catsFromDb = await _catImageRepository.GetCatsAsync(catsNum, from, viewedCats, cancellationToken);
 
         if (catsFromDb.Length < catsNum)

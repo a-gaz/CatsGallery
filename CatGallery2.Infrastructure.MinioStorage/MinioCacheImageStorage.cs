@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
 
-namespace CatGallery2.Infrastructure.Minio;
+namespace CatGallery2.Infrastructure.MinioStorage;
 
 internal sealed class MinioCacheImageStorage : IImageStorage
 {

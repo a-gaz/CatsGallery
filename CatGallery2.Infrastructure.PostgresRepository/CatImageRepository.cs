@@ -2,7 +2,7 @@ using CatGallery2.Application.Services.Entities;
 using CatGallery2.Application.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatGallery2.Infrastructure.PostgresStorage;
+namespace CatGallery2.Infrastructure.PostgresRepository;
 
 internal sealed class CatImageRepository : ICatImageRepository
 {

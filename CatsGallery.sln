@@ -6,11 +6,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Infrastructure.CatApi", "CatGallery2.Infrastructure.CatApi\CatGallery2.Infrastructure.CatApi.csproj", "{51173DED-6B97-403C-8B4A-71ECC346C96C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Infrastructure.Minio", "CatGallery2.Infrastructure.Minio\CatGallery2.Infrastructure.Minio.csproj", "{08F4E243-9A71-46E3-980E-7A22571BB339}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Infrastructure.MinioStorage", "CatGallery2.Infrastructure.MinioStorage\CatGallery2.Infrastructure.MinioStorage.csproj", "{08F4E243-9A71-46E3-980E-7A22571BB339}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Infrastructure.PostgresStorage", "CatGallery2.Infrastructure.PostgresStorage\CatGallery2.Infrastructure.PostgresStorage.csproj", "{9A50DCC3-5811-4827-9ACD-D7FEFF1B0109}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Infrastructure.PostgresRepository", "CatGallery2.Infrastructure.PostgresRepository\CatGallery2.Infrastructure.PostgresRepository.csproj", "{9A50DCC3-5811-4827-9ACD-D7FEFF1B0109}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Infrastructure.RedisStorage", "CatGallery2.Infrastructure.RedisStorage\CatGallery2.Infrastructure.RedisStorage.csproj", "{B4FC4322-2F94-4563-B8B3-2F7E709D1A79}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Infrastructure.RedisCache", "CatGallery2.Infrastructure.RedisCache\CatGallery2.Infrastructure.RedisCache.csproj", "{B4FC4322-2F94-4563-B8B3-2F7E709D1A79}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatGallery2.Web", "CatGallery2.Web\CatGallery2.Web.csproj", "{E95F8E50-135A-4ECD-82AC-52CFEE4AE866}"
 EndProject

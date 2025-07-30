@@ -1,7 +1,7 @@
 using CatGallery2.Application.Services.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatGallery2.Infrastructure.PostgresStorage;
+namespace CatGallery2.Infrastructure.PostgresRepository;
 
 internal sealed class ApplicationDbContext : DbContext
 {

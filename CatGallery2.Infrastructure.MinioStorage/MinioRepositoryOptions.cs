@@ -1,4 +1,4 @@
-namespace CatGallery2.Infrastructure.Minio;
+namespace CatGallery2.Infrastructure.MinioStorage;
 
 internal sealed class MinioRepositoryOptions
 {

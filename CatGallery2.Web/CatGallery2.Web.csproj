@@ -9,9 +9,9 @@
     <ItemGroup>
       <ProjectReference Include="..\CatGallery2.Application\CatGallery2.Application.csproj" />
       <ProjectReference Include="..\CatGallery2.Infrastructure.CatApi\CatGallery2.Infrastructure.CatApi.csproj" />
-      <ProjectReference Include="..\CatGallery2.Infrastructure.Minio\CatGallery2.Infrastructure.Minio.csproj" />
-      <ProjectReference Include="..\CatGallery2.Infrastructure.PostgresStorage\CatGallery2.Infrastructure.PostgresStorage.csproj" />
-      <ProjectReference Include="..\CatGallery2.Infrastructure.RedisStorage\CatGallery2.Infrastructure.RedisStorage.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.MinioStorage\CatGallery2.Infrastructure.MinioStorage.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.PostgresRepository\CatGallery2.Infrastructure.PostgresRepository.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.RedisCache\CatGallery2.Infrastructure.RedisCache.csproj" />
     </ItemGroup>
 
     <ItemGroup>

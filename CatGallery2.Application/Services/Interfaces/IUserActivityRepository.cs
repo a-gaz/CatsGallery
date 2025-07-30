@@ -2,7 +2,7 @@
 
 namespace CatGallery2.Application.Services.Interfaces;
 
-public interface IViewsRepository
+public interface IUserActivityRepository
 {
     Task AddAsync(Guid userId, CatImage[] catImages, CancellationToken cancellationToken);
     Task<long[]> GetByUserAsync(Guid userId, CancellationToken cancellationToken);
