@@ -74,8 +74,9 @@ public class GalleryController : Controller
     {
         try
         {
-            string presignedUrl = await _catService.GetUrlAsync(fileName, cancellationToken);
-            return Redirect(presignedUrl);
+            var  catImageBytes = await _catService.GetCatImageBytes(fileName, cancellationToken);
+            
+            return File(catImageBytes, "image/jpeg");
         }
         catch (Exception ex)
         {

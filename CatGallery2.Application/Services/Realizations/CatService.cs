@@ -114,12 +114,13 @@ public sealed class CatService : ICatService
         }
     }
 
-    public async Task<string> GetUrlAsync(string fileName, CancellationToken cancellationToken)
+    public async Task<byte[]> GetCatImageBytes(string fileName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(fileName))
             throw new ArgumentException("Файла нет!");
-    
-        return await _cacheImageStorage.GetPresignedUrlAsync(fileName, cancellationToken);
+
+        var catImageMemStream = await _cacheImageStorage.DownloadImageAsync(fileName, cancellationToken);
+        return catImageMemStream.ToArray();
     }
 
     private async Task<CatImage[]> GetCatsAroundIndex(long currIndex, long[] viewedCatIds, CancellationToken cancellationToken)

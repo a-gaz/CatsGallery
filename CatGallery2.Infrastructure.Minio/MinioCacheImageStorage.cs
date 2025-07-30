@@ -59,21 +59,21 @@ internal sealed class MinioCacheImageStorage : IImageStorage
         }
     }
     
-    public async Task<string> GetPresignedUrlAsync(string fileName, CancellationToken cancellationToken)
+    public async Task<MemoryStream> DownloadImageAsync(string fileName, CancellationToken cancellationToken)
     {
-        try
-        {
-            var args = new PresignedGetObjectArgs()
-                .WithBucket(_bucketName)
-                .WithObject(fileName)
-                .WithExpiry(3600);
+        var stream = new MemoryStream();
+        
+        var getObjectArgs = new GetObjectArgs()
+            .WithBucket(_bucketName)
+            .WithObject(fileName)
+            .WithCallbackStream(cs =>
+            {
+                cs.CopyTo(stream);
+            });
 
-            string url = await _client.PresignedGetObjectAsync(args);
-            return url;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        await _client.GetObjectAsync(getObjectArgs, cancellationToken);
+  
+        stream.Seek(0, SeekOrigin.Begin);
+        return stream;
     }
 }
