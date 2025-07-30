@@ -3,12 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatGallery2.Infrastructure.PostgresStorage;
 
-public sealed class ApplicationDbContext : DbContext
+internal sealed class ApplicationDbContext : DbContext
 {
     public DbSet<CatImage> CatImages { get; set; } = null!;
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         Database.EnsureCreated();
+    }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CatImage>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+        });
     }
 }

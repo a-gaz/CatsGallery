@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatGallery2.Infrastructure.PostgresStorage;
 
-public sealed class CatImageRepository : ICatImageRepository
+internal sealed class CatImageRepository : ICatImageRepository
 {
     protected readonly ApplicationDbContext _context;
     private static long _counter = 0;
