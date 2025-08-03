@@ -1,6 +1,5 @@
 using CatGallery2.Application.Services.Entities;
 using CatGallery2.Application.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 

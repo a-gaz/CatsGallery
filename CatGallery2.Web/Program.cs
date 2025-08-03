@@ -8,10 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-builder.Services.AddMinio(builder.Configuration);
 builder.Services.AddCatApi(builder.Configuration);
 builder.Services.AddPostgresStorage(builder.Configuration);
 builder.Services.AddRedisStorage(builder.Configuration);
+builder.Services.AddMinio(builder.Configuration);
 builder.Services.AddApp(builder.Configuration);
 
 
@@ -24,6 +24,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseHsts();
 
 app.UseRouting();
 

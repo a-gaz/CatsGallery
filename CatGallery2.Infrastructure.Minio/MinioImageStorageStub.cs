@@ -23,12 +23,7 @@ internal sealed class MinioImageStorageStub : IImageStorage
         return fileName;
     }
 
-    public Task<string> GetPresignedUrlAsync(string fileName, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DownloadImageAsync(string fileName, Stream outputStream, CancellationToken cancellationToken)
+    public Task<MemoryStream> DownloadImageAsync(string fileName, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

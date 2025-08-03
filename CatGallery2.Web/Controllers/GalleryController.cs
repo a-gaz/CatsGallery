@@ -69,13 +69,15 @@ public class GalleryController : Controller
         }
     }
     
-    [HttpGet]
+    [HttpGet("GetLink")]
     public async Task<IActionResult> GetLink(string fileName, CancellationToken cancellationToken)
     {
         try
         {
-            string presignedUrl = await _catService.GetUrlAsync(fileName, cancellationToken);
-            return Redirect(presignedUrl);
+            var memoryStream = await _catService.GetUrlAsync(fileName, cancellationToken);
+            
+            return File(memoryStream, "image/jpeg", fileName);
+            // return Redirect(presignedUrl);
         }
         catch (Exception ex)
         {

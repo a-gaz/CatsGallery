@@ -10,6 +10,7 @@ CatsGallery.sln.DotSettings.user
 CatsShowcase.sln.DotSettings.user
 
 .git
+.env
 
 # User-specific files
 *.suo

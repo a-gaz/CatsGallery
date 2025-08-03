@@ -64,7 +64,7 @@ public sealed class CatService : ICatService
         
         var cats = await GetCatsAroundIndex(newIndex, catImageIds, cancellationToken);
 
-        WaitForAll(cats.ToArray());
+        // WaitForAll(cats.ToArray());
         return cats;
     }
     
@@ -114,12 +114,12 @@ public sealed class CatService : ICatService
         }
     }
 
-    public async Task<string> GetUrlAsync(string fileName, CancellationToken cancellationToken)
+    public async Task<MemoryStream> GetUrlAsync(string fileName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(fileName))
             throw new ArgumentException("Файла нет!");
     
-        return await _cacheImageStorage.GetPresignedUrlAsync(fileName, cancellationToken);
+        return await _cacheImageStorage.DownloadImageAsync(fileName, cancellationToken);
     }
 
     private async Task<CatImage[]> GetCatsAroundIndex(long currIndex, long[] viewedCatIds, CancellationToken cancellationToken)
@@ -127,7 +127,7 @@ public sealed class CatService : ICatService
         var catIdsToFetch = new List<long>();
 
         var hasPrev = currIndex - 1 >= 0;
-        var hasCurr = currIndex >= 0 && currIndex < viewedCatIds.Length;
+        var hasCurr = currIndex >= 0 && viewedCatIds.Length > 0 && (currIndex < viewedCatIds.Length);
         var hasNext = currIndex + 1 < viewedCatIds.Length;
 
         if (hasPrev)

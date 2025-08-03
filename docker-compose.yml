@@ -1,0 +1,87 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: CatGallery2.Web/Dockerfile
+    ports:
+      - "8000:8080"
+    environment:
+      - Minio__Endpoint=minio:9000
+      - Minio__AccessKey=minioadmin
+      - Minio__SecretKey=minioadmin
+      - Minio__BucketName=cat-gallery
+      - Minio__UseSsl=false
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - minio-sample
+    depends_on:
+      - db
+      - redis
+      - minio
+  
+  db:
+    image: postgres
+    restart: unless-stopped
+    user: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=272727
+      - POSTGRES_DB=catgallerydb
+    expose:
+      - 5432
+    networks:
+      - minio-sample
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save 60 1000
+    networks:
+      - minio-sample
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    command: server --console-address ":9001" /data/
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      - MINIO_DEFAULT_BUCKETS=cat-gallery
+    networks:
+      - minio-sample
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+networks:
+  minio-sample:
+    driver: bridge
+    
+volumes:
+  db_data:
+  redis_data:
+  minio_data:
