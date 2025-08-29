@@ -7,17 +7,26 @@ services:
       - "8000:8080"
     environment:
       - Minio__Endpoint=minio:9000
-      - Minio__AccessKey=minioadmin
-      - Minio__SecretKey=minioadmin
-      - Minio__BucketName=cat-gallery
+      - Minio__AccessKey=${MINIO_ROOT_USER}
+      - Minio__SecretKey=${MINIO_ROOT_PASSWORD}
+      - Minio__BucketName=${MINIO_BUCKET_NAME}
       - Minio__UseSsl=false
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Postgres=${POSTGRES_CONNECTION_STRING}
+      - Redis__ConnectionString=${REDIS_CONNECTION_STRING}
+      - Redis__DefaultExpiration=${REDIS_EXPIRATION}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    env_file:
+      - .env
     networks:
       - minio-sample
     depends_on:
-      - db
-      - redis
-      - minio
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: on-failure
   
   db:
     image: postgres
@@ -26,15 +35,17 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=272727
-      - POSTGRES_DB=catgallerydb
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      - .env
     expose:
       - 5432
     networks:
       - minio-sample
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -42,15 +53,19 @@ services:
   redis:
     image: redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
-    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save 60 1000
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    env_file:
+      - .env
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
     networks:
       - minio-sample
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -66,9 +81,11 @@ services:
     volumes:
       - minio_data:/data
     environment:
-      - MINIO_ROOT_USER=minioadmin
-      - MINIO_ROOT_PASSWORD=minioadmin
-      - MINIO_DEFAULT_BUCKETS=cat-gallery
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_DEFAULT_BUCKETS=${MINIO_BUCKET_NAME}
+    env_file:
+      - .env
     networks:
       - minio-sample
     healthcheck:
@@ -76,11 +93,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      
+
 networks:
   minio-sample:
     driver: bridge
-    
+
 volumes:
   db_data:
   redis_data:
