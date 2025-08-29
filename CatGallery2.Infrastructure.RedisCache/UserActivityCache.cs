@@ -3,9 +3,9 @@ using CatGallery2.Application.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
-namespace CatGallery2.Infrastructure.RedisStorage;
+namespace CatGallery2.Infrastructure.RedisCache;
 
-internal sealed class CachingRepository : IViewsRepository
+internal sealed class UserActivityCache : IUserActivityRepository
 {
     private readonly IDatabase _cache;
     private readonly TimeSpan _defaultExpiration;
@@ -13,7 +13,7 @@ internal sealed class CachingRepository : IViewsRepository
     private const string KeyViewsDb = "userviews:";
     private const string KeyPointersDb = "userpointers:";
 
-    public CachingRepository(IConnectionMultiplexer distributedCache, IOptions<RedisRepositoryOptions> options)
+    public UserActivityCache(IConnectionMultiplexer distributedCache, IOptions<UserActivityCacheOptions> options)
     {
         _cache = distributedCache.GetDatabase();
         

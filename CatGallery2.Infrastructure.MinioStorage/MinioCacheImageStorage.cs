@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
 
-namespace CatGallery2.Infrastructure.Minio;
+namespace CatGallery2.Infrastructure.MinioStorage;
 
 internal sealed class MinioCacheImageStorage : IImageStorage
 {
@@ -79,24 +79,7 @@ internal sealed class MinioCacheImageStorage : IImageStorage
             await tsc.Task;
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
-            
-            // var statArgs = new StatObjectArgs()
-            //     .WithBucket(_bucketName)
-            //     .WithObject(fileName);
-        
-            // await _client.StatObjectAsync(statArgs, cancellationToken);
-            //
-            // var getObjectArgs = new GetObjectArgs()
-            //     .WithBucket(_bucketName)
-            //     .WithObject(fileName)
-            //     .WithCallbackStream(stream => 
-            //     {
-            //         stream.CopyTo(outputStream);
-            //         outputStream.Seek(0, SeekOrigin.Begin);
-            //     });
-            //
-            // await _client.GetObjectAsync(getObjectArgs, cancellationToken);
-        }
+     }
         catch (Exception)
         {
             throw;

@@ -3,14 +3,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 
-namespace CatGallery2.Infrastructure.Minio;
+namespace CatGallery2.Infrastructure.MinioStorage;
 
 public static class ServiceCollectionsExtensions 
 {
     public static void AddMinio(this IServiceCollection services, IConfiguration configuration)
     {
-        var options = configuration.GetRequiredSection(MinioRepositoryOptions.SectionName)
-            .Get<MinioRepositoryOptions>();
+        var options = configuration.GetRequiredSection(MinioRepositoryOptions.SectionName).Get<MinioRepositoryOptions>();
+        if (options == null)
+        {
+            throw new NullReferenceException($"{nameof(MinioRepositoryOptions)}.{nameof(MinioRepositoryOptions.SectionName)}");
+        }
         
         services.Configure<MinioRepositoryOptions>(configuration.GetSection(MinioRepositoryOptions.SectionName));
         
@@ -21,6 +24,6 @@ public static class ServiceCollectionsExtensions
             opts.WithSSL(options.UseSsl);
             opts.Build();
         });
-        services.AddScoped<IImageStorage, MinioCacheImageStorage>();
+        services.AddSingleton<IImageStorage, MinioCacheImageStorage>();
     }
 }

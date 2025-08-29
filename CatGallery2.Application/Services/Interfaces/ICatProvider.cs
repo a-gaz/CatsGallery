@@ -2,8 +2,7 @@
 
 public interface ICatProvider
 {
-    Task<CatResponse[]> GetRandomCatsOneByOneAsync(int pageSize, CancellationToken cancellationToken);
-    Task<CatResponse[]> GetRandomCatsAsync(int pageSize, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<CatResponse>> GetRandomCatsOneByOneAsync(int pageSize, CancellationToken cancellationToken);
     Task<Stream> GetImageByIdAsync(string id, CancellationToken cancellationToken);
 }
 

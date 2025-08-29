@@ -34,12 +34,8 @@ public sealed class CatUploadBackgroundService : BackgroundService
                 if (!imageIsAdded)
                 {
                     var image = await catProvider.GetImageByIdAsync(foreignId, stoppingToken);
-                    if (image != null)
-                    {
-                        var fileName = await imageStorage.UploadImageAsync(image, stoppingToken);
-                            
-                        await catImageRepository.AddCatImageAsync(foreignId, fileName, stoppingToken);
-                    }
+                    var fileName = await imageStorage.UploadImageAsync(image, stoppingToken);
+                    await catImageRepository.AddCatImageAsync(foreignId, fileName, stoppingToken);
                 }
             }
             catch (Exception ex)

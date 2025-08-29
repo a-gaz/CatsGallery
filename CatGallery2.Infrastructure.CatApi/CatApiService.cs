@@ -12,12 +12,13 @@ internal sealed class CatApiService : ICatProvider
         _httpClient = httpClient;
     }
 
-    public async Task<CatResponse[]> GetRandomCatsOneByOneAsync(int pageSize, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<CatResponse>> GetRandomCatsOneByOneAsync(int pageSize, CancellationToken cancellationToken)
     {
         var jsonResponses = new List<CatResponse>();
+        
         for (var i = 0; i < pageSize; i++)
         {
-            var response = await _httpClient.GetAsync($"/cat?json=true&limit={pageSize}", cancellationToken);
+            var response = await _httpClient.GetAsync($"/cat?json=true", cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("НЕТ КОТА!");
@@ -26,21 +27,8 @@ internal sealed class CatApiService : ICatProvider
             
             jsonResponses.Add(jsonResponse);
         }
-        return jsonResponses.ToArray();
-    }
-    
-    public async Task<CatResponse[]> GetRandomCatsAsync(int pageSize, CancellationToken cancellationToken)
-    {
-        var response = await _httpClient.GetAsync($"/api/cats?json=true&limit={pageSize}", cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception("НЕТ КОТА!");
-        }
         
-        var jsonResponse = await response.Content.ReadFromJsonAsync<CatResponse[]>(cancellationToken);
-        
-        return jsonResponse;
+        return jsonResponses;
     }
 
     public async Task<Stream> GetImageByIdAsync(string id, CancellationToken cancellationToken)
