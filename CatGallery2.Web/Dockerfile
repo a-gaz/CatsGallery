@@ -7,12 +7,13 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 ## Копирование всех файлов проекта
-COPY ["CatGallery2.Web/CatGallery2.Web.csproj", "CatGallery2.Web/"]
 COPY ["CatGallery2.Application/CatGallery2.Application.csproj", "CatGallery2.Application/"]
+COPY ["CatGallery2.Auth/CatGallery2.Auth.csproj", "CatGallery2.Auth/"]
 COPY ["CatGallery2.Infrastructure.CatApi/CatGallery2.Infrastructure.CatApi.csproj", "CatGallery2.Infrastructure.CatApi/"]
-COPY ["CatGallery2.Infrastructure.Minio/CatGallery2.Infrastructure.Minio.csproj", "CatGallery2.Infrastructure.Minio/"]
-COPY ["CatGallery2.Infrastructure.PostgresStorage/CatGallery2.Infrastructure.PostgresStorage.csproj", "CatGallery2.Infrastructure.PostgresStorage/"]
-COPY ["CatGallery2.Infrastructure.RedisStorage/CatGallery2.Infrastructure.RedisStorage.csproj", "CatGallery2.Infrastructure.RedisStorage/"]
+COPY ["CatGallery2.Infrastructure.MinioStorage/CatGallery2.Infrastructure.MinioStorage.csproj", "CatGallery2.Infrastructure.MinioStorage/"]
+COPY ["CatGallery2.Infrastructure.PostgresRepository/CatGallery2.Infrastructure.PostgresRepository.csproj", "CatGallery2.Infrastructure.PostgresRepository/"]
+COPY ["CatGallery2.Infrastructure.RedisCache/CatGallery2.Infrastructure.RedisCache.csproj", "CatGallery2.Infrastructure.RedisCache/"]
+COPY ["CatGallery2.Web/CatGallery2.Web.csproj", "CatGallery2.Web/"]
 
 RUN dotnet restore "CatGallery2.Web/CatGallery2.Web.csproj"
 
