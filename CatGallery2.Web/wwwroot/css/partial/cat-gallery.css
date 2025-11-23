@@ -1,0 +1,35 @@
+main {
+    flex: 1;
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+}
+
+main > div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-rows: 10fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.photo-grid__cell {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}

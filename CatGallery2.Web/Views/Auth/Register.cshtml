@@ -1,0 +1,22 @@
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="login-container">
+    <form asp-action="Register" asp-controller="Auth" method="post">
+        <h1>Вход</h1>
+        <div class="graphic-container">
+            <div class="input-box">
+                <input type="text" name="username" placeholder="Имя пользователя">
+                <img class="icon" src="~/images/user.png" alt="logo">
+            </div>
+            <div class="input-box">  
+                <input type="password" name="password" placeholder="Пароль">
+                <img class="icon" src="~/images/lock.png" alt="logo">
+            </div>
+            <button type="submit" class="btn-submit">Регистрация</button>
+        </div>
+    </form>
+    <p class="route">Есть аккаунт? <a href="/Auth/Login">Залогинься!</a></p>
+</div>

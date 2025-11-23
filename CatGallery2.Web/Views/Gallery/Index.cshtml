@@ -1,0 +1,10 @@
+﻿@model CatGallery2.Web.ViewModels.GalleryViewModel
+
+@{
+    Layout = "_PageWithHeader";
+    ViewData["Title"] = "Главная страница";
+}
+
+<div class="cat-gallery-container" id="cat-gallery-container">
+    @await Html.PartialAsync("GalleryPartial", Model)
+</div>

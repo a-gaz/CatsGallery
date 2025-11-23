@@ -1,0 +1,12 @@
+:root {
+    --base-color-accent: #242444;           /* темный */  /* цвет текста, 
+                                                                фон кнопок */
+    --base-color-back: #df7779;             /* красный */ /* цвет фона базовый */
+    --base-color-back-2: #e5e0b0;           /* желтый */  /* цвет фона базовый (на контрасте с .--base-color-back)
+                                                                цвет текста на фоне .--base-color-accent */
+    
+    --color-helper-orange: #e0956e; /* оранжевый */
+    --color-helper-light-orange: #e1b986; /* светло-оранжевый */
+}
+
+

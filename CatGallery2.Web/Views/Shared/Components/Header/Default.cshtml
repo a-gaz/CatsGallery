@@ -1,0 +1,49 @@
+@model CatGallery2.Application.Entities.ApplicationUser?
+
+<nav>
+    <div class="nav-container">
+        <a href="/Gallery/Index">
+            <img class="logo" src="~/favicon.ico" alt="logo">
+        </a>
+        
+        @if (User.Identity != null && User.Identity.IsAuthenticated && Model != null)
+        {
+            <div class="nav-container-inner">
+                <a href="/Wishlist/GetWishlist" class="button">Избранное</a>
+            </div>
+                
+            <div class="nav-container-inner right">
+                <button class="button dropdown-toggle" data-bs-toggle="dropdown">
+                    @Model.UserName
+                </button>
+                <ul class="dropdown-menu my-dropdown-menu">
+                    <li>
+                        <a asp-controller="Account"
+                           asp-action=""
+                           class="dropdown-item">Профиль</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Account"
+                           asp-action=""
+                           class="dropdown-item">Настройки</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <form action="Auth/Logout" method="post">
+                            <button type="submit" class="dropdown-item">Выйти</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            }
+        else
+        {
+            <div class="nav-container-inner right">
+                <a href="/Auth/Login" class="button">Логин</a>
+                <a href="/Auth/Register" class="button btn-black">Регистрация</a>
+            </div>
+        }
+        </div>
+</nav>

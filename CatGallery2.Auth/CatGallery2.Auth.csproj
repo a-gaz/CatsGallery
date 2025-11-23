@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CatGallery2.Application\CatGallery2.Application.csproj" />
+      <ProjectReference Include="..\CatGallery2.Infrastructure.PostgresRepository\CatGallery2.Infrastructure.PostgresRepository.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+    </ItemGroup>
+
+</Project>

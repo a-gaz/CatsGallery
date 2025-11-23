@@ -1,0 +1,22 @@
+button, 
+.button {
+    padding: 10px 25px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: var(--base-color-accent);
+}
+
+button:hover,
+.button:hover
+{
+    background-color: var(--base-color-back-2);
+    color: var(--base-color-accent);
+}
+
+.btn-black {
+    background-color: var(--base-color-accent);
+    color: var(--base-color-back-2);
+}

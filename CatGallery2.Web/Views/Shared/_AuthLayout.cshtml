@@ -1,0 +1,16 @@
+@{
+    Layout = "_Layout";
+    ViewData["ShowHeader"] = false;
+    ViewData["ShowFooter"] = false;
+}
+
+
+<div class="auth-form-container">
+    <div class="auth-left-container">
+        <img src="/images/wallpaper.jpg"
+             class="left-photo" alt="Next Cat"/>
+    </div>
+    <div class="auth-right-container">
+        @RenderBody()
+    </div>
+</div>

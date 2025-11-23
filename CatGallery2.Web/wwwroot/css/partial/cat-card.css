@@ -1,0 +1,82 @@
+.cat-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.photo-frame {
+    width: 500px;
+    height: 600px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.cropped-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.curr-photo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.photo-frame--prev,
+.photo-frame--next {
+    height: 600px;
+    opacity: 0.7;
+    filter: brightness(0.7);
+}
+
+.photo-frame--curr {
+    height: 650px;
+    z-index: 1000;
+}
+
+.like-btn {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    width: auto;
+    height: auto;
+    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.like-btn:hover {
+    background-color: transparent;
+    color: transparent;
+}
+
+.like-icon {
+    display: block;
+    background-size: contain;
+    background-position: center;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    filter: brightness(1.1) contrast(1.2);
+}
+
+.icon-heart-red {
+    background-image: url('/images/heart_red.png');
+}
+
+.icon-heart-black {
+    background-image: url('/images/heart_black.png');
+}
+
+.cat-card .like-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 1000;
+}

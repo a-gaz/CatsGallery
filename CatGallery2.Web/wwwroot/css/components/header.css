@@ -1,0 +1,46 @@
+header {
+    display: flex;
+    flex-direction: column;
+}
+
+header > nav {
+    flex: 1;
+    display: flex;
+}
+
+hr {
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(#595959);
+    opacity: 1.0;
+}
+
+.dropdown-divider {
+    padding: 0;
+}
+
+.nav-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.nav-container-inner {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    width: auto;
+}
+
+.right {
+    justify-content: flex-end;
+}
+
+.logo {
+    margin-right: 20px;
+    height: 40px;
+    width: auto;
+}
+

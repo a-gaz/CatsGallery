@@ -1,0 +1,30 @@
+@model CatGallery2.Web.ViewModels.WishlistViewModel
+
+@{
+    Layout = "_PageWithHeader";
+    ViewData["Title"] = "Избранное";
+}
+
+<div class="cat-gallery-container" id="cat-gallery-container">
+    @if (Model.CatProducts != null && Model.CatProducts.Any())
+    {
+        <div class="full-wishlist">
+            @foreach (var image in Model.CatProducts)
+            {
+                <div class="wishlist-item">
+                    @await Html.PartialAsync("_CatCard", image)
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-wishlist">
+            <h3>Вишлист пуст</h3>
+            <p>Добавьте первые изображения котиков в ваш вишлист</p>
+            <a href="@Url.Action("Index", "Gallery")" class="button">Найти котиков</a>
+        </div>
+    }
+</div>
+
+<script src="~/js/components/like-btn.js"></script>

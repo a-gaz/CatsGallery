@@ -1,0 +1,32 @@
+@model CatGallery2.Web.ViewModels.GalleryViewModel
+
+<div class="photo-grid">
+    <div class="photo-frame photo-frame--prev photo-grid__cell">
+        @await Html.PartialAsync("_CatCard", Model.PrevCat)
+    </div>
+    
+    <div class="photo-frame photo-frame--curr curr-photo-container photo-grid__cell">
+        @await Html.PartialAsync("_CatCard", Model.CurrCat)
+    </div>
+    
+    <div class="photo-frame photo-frame--next photo-grid__cell">
+        @await Html.PartialAsync("_CatCard", Model.NextCat)
+    </div>
+    
+    <div class="photo-grid__cell"></div>
+    <div class="photo-grid__cell navigation-buttons"> 
+        <button class="gallery-btn"
+                data-action="@Url.Action("PrevCat", "Gallery")">
+            Предыдущая
+        </button>
+    
+        <button class="gallery-btn"
+                data-action="@Url.Action("NextCat", "Gallery")">
+            Следующая
+        </button>
+    </div>
+    <div class="photo-grid__cell"></div>
+</div>
+
+<script src="~/js/components/like-btn.js"></script>
+<script src="~/js/partial/cat-gallery.js"></script>

@@ -1,0 +1,176 @@
+.cat-product-create-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: stretch;
+    margin: 100px;
+}
+
+.cat-product-create-container > input {
+    display: none;
+}
+
+.cat-product-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.cat-product-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    gap: 10px;
+}
+
+.cat-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    margin-top:30px;
+}
+
+.tags-section {
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tags-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tag-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tag-item .tag {
+    flex: 1;
+    padding-right: 2.5rem;
+}
+
+.tag { }
+
+.remove-tag-btn {
+    position: absolute;
+    right: 2px;
+    width: 25px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 40px;
+}
+
+.remove-tag-btn:hover {
+    background: red;
+    opacity: 1;
+}
+
+.tags-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-tag-btn {
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.photo-frame-main,
+.photo-frame-preview,
+.photo-frame-preview-main {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.photo-frame-preview-main {
+    margin: 10px;
+}
+
+.photo-container {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.img-upload {
+    margin: 10px;
+    gap: 10px;
+}
+
+.cropped-default-image {
+    width: 100%;
+    height: 100%;
+}
+
+.cat-photo {
+    cursor: pointer;
+}
+
+.cat-photo:hover {
+    opacity: 0.8;
+}
+
+.uploaded-image,
+.default-image {
+    cursor: pointer;
+    width: 100px;
+    height: 100%;
+}
+
+.uploaded-image-main,
+.default-image-main {
+    cursor: pointer;
+    width: 430px;
+}
+
+.remove-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 10px 15px;
+    background-color: transparent;
+}
+
+.input-box-tag {
+    display: flex;
+    flex-direction: row;
+}
+
+.tag-highlight {
+    animation: highlightFlash 1s ease-in-out;
+}
+
+@keyframes highlightFlash {
+    0% {
+        background-color: var(--color-helper-light-orange);
+        box-shadow: 0 0 10px var(--color-helper-orange);
+        border-color: var(--color-helper-orange);
+    }
+    70% {
+        background-color: var(--color-helper-light-orange);
+        box-shadow: 0 0 5px var(--color-helper-orange);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+        border-color: rgba(255, 255, 255, 0.58);
+    }
+}

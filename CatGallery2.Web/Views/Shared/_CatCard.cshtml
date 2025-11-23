@@ -1,0 +1,14 @@
+@model CatGallery2.Web.ViewModels.CatProductViewModel
+
+<div class="cat-card">
+    @Html.AntiForgeryToken()
+    <div class="photo-frame photo-frame--curr curr-photo-container">
+        <img src="@Url.Action("GetFile", "Gallery", new { fileName = Model.CatImages[0].FileName })"
+             class="cropped-image" alt="Котик"/>
+    </div>
+    <button class="like-btn @(Model.IsInWishlist ? "btn-success" : "")"
+            data-action="@Url.Action("AddToWishlist", "Wishlist", new { foreignId = Model.CatImages[0].ForeignId })"
+            data-is-liked="@Model.IsInWishlist.ToString().ToLower()">
+        <div class="like-icon @(Model.IsInWishlist ? "icon-heart-red" : "icon-heart-black")"></div>
+    </button>
+</div>

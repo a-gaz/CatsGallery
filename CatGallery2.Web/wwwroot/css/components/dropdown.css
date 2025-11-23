@@ -1,0 +1,18 @@
+.dropdown-menu {
+    padding: 0;
+    border-radius: 0;
+    background-color: var(--base-color-back);
+}
+
+.dropdown-item {
+    background-color: var(--base-color-back);
+}
+
+
+.dropdown-menu:hover {
+
+}
+
+.dropdown-item:hover {
+    background-color: var(--base-color-back-2);
+}
