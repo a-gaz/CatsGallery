@@ -22,7 +22,7 @@ public static class ServiceCollectionsExtensions
             opts.WithEndpoint(options.Endpoint);
             opts.WithCredentials(options.AccessKey, options.SecretKey);
             opts.WithSSL(options.UseSsl);
-            opts.Build();
+            // opts.Build();
         });
         services.AddSingleton<IImageStorage, MinioCacheImageStorage>();
     }
